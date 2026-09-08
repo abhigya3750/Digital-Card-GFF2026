@@ -239,31 +239,64 @@ function renderProfileCard(prof) {
   document.getElementById("ownerBtnLabel").textContent = `${prof.name.split(' ')[0]}'s Notes`;
 }
 
-// Download vCard
+// Download / Save vCard to Contacts (iOS & Android Web Share Support)
 function downloadVCard() {
   const p = currentProfile;
-  const vcardText = `BEGIN:VCARD
-VERSION:3.0
-N:${p.name.split(' ').reverse().join(';')};;;
-FN:${p.name}
-${p.org ? `ORG:${p.org}\n` : ''}TITLE:${p.title || p.headline}
-TEL;TYPE=CELL,VOICE:${p.phone}
-EMAIL;TYPE=WORK,INTERNET:${p.email}
-${p.personalEmail ? `EMAIL;TYPE=HOME,INTERNET:${p.personalEmail}\n` : ''}URL:${p.linkedIn}
-NOTE:Met at Global Fintech Fest 2026 (GFF 2026).
-END:VCARD`;
+  const cleanPhone = p.phone.replace(/[^0-9+]/g, "");
+  
+  const vcardLines = [
+    "BEGIN:VCARD",
+    "VERSION:3.0",
+    `N:${p.name.split(' ').reverse().join(';')};;;`,
+    `FN:${p.name}`,
+    p.org ? `ORG:${p.org}` : "",
+    `TITLE:${p.title || p.headline}`,
+    `TEL;TYPE=CELL,VOICE:${cleanPhone}`,
+    `EMAIL;TYPE=WORK,INTERNET:${p.email}`,
+    p.personalEmail ? `EMAIL;TYPE=HOME,INTERNET:${p.personalEmail}` : "",
+    `URL:${p.linkedIn}`,
+    "NOTE:Met at Global Fintech Fest 2026 (GFF 2026).",
+    "END:VCARD"
+  ].filter(Boolean);
 
-  const blob = new Blob([vcardText], { type: "text/vcard;charset=utf-8;" });
+  const vcardText = vcardLines.join("\r\n");
+  const blob = new Blob([vcardText], { type: "text/vcard;charset=utf-8" });
+  const filename = `${p.name.replace(/\s+/g, '_')}_GFF2026.vcf`;
+
+  // Native Web Share API for Mobile Devices (iPhone & Android)
+  if (navigator.canShare && navigator.share && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+    try {
+      const file = new File([blob], filename, { type: "text/vcard" });
+      if (navigator.canShare({ files: [file] })) {
+        navigator.share({
+          files: [file],
+          title: p.name,
+          text: `Contact card for ${p.name} (GFF 2026)`
+        }).then(() => {
+          showToast("Contact card shared!");
+        }).catch((err) => {
+          if (err.name !== 'AbortError') fallbackDownload(blob, filename);
+        });
+        return;
+      }
+    } catch (e) {
+      console.log("Web share failed, using fallback:", e);
+    }
+  }
+
+  fallbackDownload(blob, filename);
+}
+
+function fallbackDownload(blob, filename) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.setAttribute("download", `${p.name.replace(/\s+/g, '_')}_GFF2026.vcf`);
+  link.setAttribute("download", filename);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-
-  showToast("Contact saved! Import into contacts.");
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  showToast("Contact card saved! Open to import.");
 }
 
 // Owner PIN Auth Logic
