@@ -27,15 +27,15 @@
 <body class="theme-nerds">
 
   <div class="app-wrapper">
-    <!-- Top Header Bar -->
+    <!-- Top Header Bar (Clean Branding; Profile Selector Hidden for Public Scanners) -->
     <header class="app-header">
       <div class="brand">
         <span class="brand-badge"><span class="flag-dot saffron"></span><span class="flag-dot green"></span> GFF '26</span>
         <span class="brand-title">Fintech Pass</span>
       </div>
       
-      <!-- Profile Switcher -->
-      <div class="profile-selector">
+      <!-- Hidden by default for public scanners; shown only in admin/owner mode -->
+      <div class="profile-selector" id="profileSelectorBox" style="display: none;">
         <select id="profileSelect" onchange="switchProfile(this.value)">
           <option value="abhigya" selected>Abhigya Kanungo</option>
           <option value="rishi">Rishi Raj (NPCI / NBBL)</option>
@@ -47,7 +47,7 @@
     <!-- Main Card Container -->
     <div class="vcard-main-card">
       
-      <!-- LINKEDIN-STYLE HERO COVER BANNER -->
+      <!-- GFF POSTER HERO COVER BANNER -->
       <div class="hero-cover" id="heroCover">
         <div class="hero-bg-overlay"></div>
         <div class="hero-header-content">
@@ -60,7 +60,7 @@
         </div>
       </div>
 
-      <!-- FULL CIRCLE PORTRAIT FRAME (Unclipped) -->
+      <!-- FULL CIRCLE PORTRAIT ROW (LinkedIn Style Overlap) -->
       <div class="hero-portrait-row">
         <div class="portrait-frame" id="portraitFrame">
           <img id="profilePhotoImg" src="" alt="Profile Photo" class="profile-photo-img" style="display:none;">
@@ -82,11 +82,6 @@
           <h1 class="profile-name" id="profName">Abhigya Kanungo</h1>
           <p class="profile-headline" id="profHeadline">Founding Member | Open for Product & Growth Roles</p>
           <p class="profile-org" id="profOrg" style="display:none;"></p>
-        </div>
-
-        <!-- Info Badges -->
-        <div class="info-tags" id="infoTags">
-          <!-- Rendered dynamically -->
         </div>
 
         <!-- Primary Call to Action Buttons -->
@@ -152,7 +147,7 @@
       </div>
     </div>
 
-    <!-- PRIVATE OWNER NOTES DRAWER (Capable of 200+ Notes with CSV Export) -->
+    <!-- PRIVATE OWNER NOTES DRAWER -->
     <div id="notesDrawer" class="notes-drawer-overlay">
       <div class="drawer-content">
         <div class="drawer-header">
@@ -164,6 +159,16 @@
             </div>
           </div>
           <button class="close-drawer-btn" onclick="closeNotesDrawer()">&times;</button>
+        </div>
+
+        <!-- Owner Admin Profile Switcher (Only visible inside unlocked Vault) -->
+        <div class="drawer-admin-switch">
+          <label for="drawerProfileSelect"><i class="fa-solid fa-user-gear"></i> Admin Switch Profile:</label>
+          <select id="drawerProfileSelect" onchange="switchProfile(this.value)">
+            <option value="abhigya">Abhigya Kanungo</option>
+            <option value="rishi">Rishi Raj (NPCI / NBBL)</option>
+            <option value="kamal">Kamal Parihar (Tapits)</option>
+          </select>
         </div>
 
         <!-- Add Note Form -->

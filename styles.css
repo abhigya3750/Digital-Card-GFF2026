@@ -170,11 +170,14 @@ body {
 /* LINKEDIN-STYLE HERO COVER BANNER (Clean Rectangular Header) */
 .hero-cover {
   position: relative;
-  height: 140px;
-  background: var(--brand-gradient);
+  height: 145px;
+  background-image: linear-gradient(180deg, rgba(6, 20, 46, 0.4) 0%, rgba(6, 20, 46, 0.75) 100%), url('assets/gff_banner.png');
+  background-size: cover;
+  background-position: center center;
   padding: 14px 16px;
   border-top-left-radius: var(--radius-xl);
   border-top-right-radius: var(--radius-xl);
+  overflow: hidden;
 }
 
 .hero-bg-overlay {
@@ -601,6 +604,32 @@ body {
   border: none;
   font-size: 1.7rem;
   color: var(--text-muted);
+  cursor: pointer;
+}
+
+.drawer-admin-switch {
+  background: var(--brand-light-bg);
+  border: 1px solid var(--border-light);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.drawer-admin-switch select {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--brand-primary);
+  outline: none;
   cursor: pointer;
 }
 

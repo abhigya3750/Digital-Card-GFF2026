@@ -21,19 +21,14 @@ const PROFILES = {
     logoSrc: "assets/nerds_logo.png",
     logoFallback: "NERDS",
     pin: "3750",
-    tags: [
-      { icon: "fa-solid fa-rocket", text: "Founding Member" },
-      { icon: "fa-solid fa-chart-line", text: "Product & Growth" },
-      { icon: "fa-solid fa-bolt", text: "GFF 2026" }
-    ],
     waMessage: "Hi Abhigya, great connecting with you at Global Fintech Fest 2026! Let's catch up regarding Product & Growth opportunities."
   },
   rishi: {
     id: "rishi",
     name: "Rishi Raj",
-    headline: "Senior Associate NBBL | GFF 2026",
+    headline: "Product Manager - NBBL",
     org: "NPCI Bharat BillPay Limited (NBBL)",
-    title: "Senior Associate",
+    title: "Product Manager",
     phone: "+919165251871",
     displayPhone: "+91 9165251871",
     email: "rishi.raj@npci.org.in",
@@ -45,12 +40,7 @@ const PROFILES = {
     photoSrc: "assets/rishi_photo.jpg",
     logoSrc: "assets/npci_logo.svg",
     logoFallback: "NPCI / NBBL",
-    pin: "9615",
-    tags: [
-      { icon: "fa-solid fa-shield-halved", text: "NBBL / BBPS Ecosystem" },
-      { icon: "fa-solid fa-money-bill-transfer", text: "Digital Payments" },
-      { icon: "fa-solid fa-bolt", text: "GFF 2026" }
-    ],
+    pin: "9165",
     waMessage: "Hi Rishi, great connecting with you at Global Fintech Fest 2026! Let's stay in touch."
   },
   kamal: {
@@ -71,11 +61,6 @@ const PROFILES = {
     logoSrc: "assets/fingpay_logo.jpg",
     logoFallback: "FINGPAY",
     pin: "141120",
-    tags: [
-      { icon: "fa-solid fa-mobile-retro", text: "Merchant Tech & AEPS" },
-      { icon: "fa-solid fa-chart-pie", text: "Fintech Builder" },
-      { icon: "fa-solid fa-bolt", text: "GFF 2026" }
-    ],
     waMessage: "Hi Kamal, great connecting with you at Global Fintech Fest 2026! Let's connect regarding Tapits / Fingpay."
   }
 };
@@ -98,19 +83,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (profileParam && PROFILES[profileParam.toLowerCase()]) {
     currentProfile = PROFILES[profileParam.toLowerCase()];
-    document.getElementById("profileSelect").value = currentProfile.id;
   } else {
     currentProfile = PROFILES.abhigya;
-    document.getElementById("profileSelect").value = "abhigya";
   }
 
+  // Admin query param toggle
+  if (urlParams.get("admin") === "true" || urlParams.get("owner") === "true") {
+    const selBox = document.getElementById("profileSelectorBox");
+    if (selBox) selBox.style.display = "block";
+  }
+
+  syncProfileSelectors(currentProfile.id);
   renderProfileCard(currentProfile);
 });
+
+function syncProfileSelectors(profileId) {
+  const topSel = document.getElementById("profileSelect");
+  const drawerSel = document.getElementById("drawerProfileSelect");
+  if (topSel) topSel.value = profileId;
+  if (drawerSel) drawerSel.value = profileId;
+}
 
 function switchProfile(profileId) {
   if (PROFILES[profileId]) {
     currentProfile = PROFILES[profileId];
     isUnlocked = false;
+    syncProfileSelectors(profileId);
     renderProfileCard(currentProfile);
     showToast(`Loaded ${currentProfile.name}'s Pass`);
   }
@@ -175,11 +173,18 @@ function renderProfileCard(prof) {
     logoBox.style.display = "none";
   }
 
-  // Render Info Tags
+  // Render Info Tags (if any exist)
   const tagsContainer = document.getElementById("infoTags");
-  tagsContainer.innerHTML = prof.tags.map(t => `
-    <span class="tag"><i class="${t.icon}"></i> ${escapeHtml(t.text)}</span>
-  `).join('');
+  if (tagsContainer) {
+    if (prof.tags && prof.tags.length > 0) {
+      tagsContainer.style.display = "flex";
+      tagsContainer.innerHTML = prof.tags.map(t => `
+        <span class="tag"><i class="${t.icon}"></i> ${escapeHtml(t.text)}</span>
+      `).join('');
+    } else {
+      tagsContainer.style.display = "none";
+    }
+  }
 
   // Primary Actions
   const cleanPhone = prof.phone.replace(/[^0-9+]/g, "");
