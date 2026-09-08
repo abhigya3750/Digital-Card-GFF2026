@@ -654,6 +654,31 @@ body {
   margin-bottom: 8px;
 }
 
+.vault-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.export-csv-btn {
+  background: var(--indian-green);
+  color: #ffffff;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--transition);
+}
+
+.export-csv-btn:hover {
+  filter: brightness(1.1);
+}
+
 .vault-bar h4 { font-size: 0.88rem; font-weight: 800; }
 .vault-bar input {
   background: var(--bg-card-sub);
@@ -661,6 +686,7 @@ body {
   border-radius: 16px;
   padding: 4px 10px;
   font-size: 0.75rem;
+  width: 110px;
 }
 
 .notes-list-grid {

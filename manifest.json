@@ -1,0 +1,16 @@
+{
+  "short_name": "GFF Pass",
+  "name": "Global Fintech Fest 2026 Digital Pass",
+  "icons": [
+    {
+      "src": "assets/abhigya_photo.jpg",
+      "type": "image/jpeg",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#06142e",
+  "theme_color": "#06142e",
+  "display": "standalone",
+  "orientation": "portrait"
+}

@@ -84,6 +84,15 @@ let currentProfile = PROFILES.abhigya;
 let isUnlocked = false;
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Register Service Worker for 100% Offline-First support
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').then(() => {
+      console.log("Service Worker registered successfully for offline support.");
+    }).catch((err) => {
+      console.log("Service worker registration failed:", err);
+    });
+  }
+
   const urlParams = new URLSearchParams(window.location.search);
   const profileParam = urlParams.get("profile");
 
@@ -397,6 +406,38 @@ function renderNotes() {
       <div style="font-size: 0.72rem; color: var(--text-light); margin-top: 4px;">${n.date}</div>
     </div>
   `).join('');
+}
+
+// Export Notes to CSV File (Supports 200+ Leads)
+function exportNotesToCSV() {
+  const notes = getNotes();
+  if (notes.length === 0) {
+    showToast("No notes to export yet!");
+    return;
+  }
+
+  const headers = ["Name", "Company", "Contact", "Topic", "Notes", "Date"];
+  const rows = notes.map(n => [
+    `"${(n.name || '').replace(/"/g, '""')}"`,
+    `"${(n.company || '').replace(/"/g, '""')}"`,
+    `"${(n.contact || '').replace(/"/g, '""')}"`,
+    `"${(n.tag || '').replace(/"/g, '""')}"`,
+    `"${(n.notes || '').replace(/"/g, '""')}"`,
+    `"${(n.date || '').replace(/"/g, '""')}"`
+  ]);
+
+  const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", `${currentProfile.name.replace(/\s+/g, '_')}_GFF2026_Leads.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+
+  showToast(`Exported ${notes.length} leads to CSV!`);
 }
 
 function escapeHtml(str) {

@@ -6,6 +6,10 @@
   <title>Digital Pass & Contact Card</title>
   <meta name="description" content="Digital Business Card & Contact Pass. Save contact, WhatsApp, LinkedIn, and email.">
   
+  <!-- PWA Manifest & Theme Color -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#06142e">
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,14 +60,14 @@
         </div>
       </div>
 
-      <!-- FULL CIRCLE PORTRAIT FRAME (LinkedIn Style Overlap - Unclipped) -->
+      <!-- FULL CIRCLE PORTRAIT FRAME (Unclipped) -->
       <div class="hero-portrait-row">
         <div class="portrait-frame" id="portraitFrame">
           <img id="profilePhotoImg" src="" alt="Profile Photo" class="profile-photo-img" style="display:none;">
           <span class="hero-initials" id="heroInitials">AK</span>
         </div>
 
-        <!-- Company Logo Box (Right Aligned in Portrait Row) -->
+        <!-- Company Logo Box -->
         <div class="logo-box" id="logoBox">
           <img id="compLogoImg" src="" alt="Company Logo" class="comp-logo-img">
           <span id="compLogoFallback" class="logo-fallback-text" style="display:none;"></span>
@@ -148,7 +152,7 @@
       </div>
     </div>
 
-    <!-- PRIVATE OWNER NOTES DRAWER -->
+    <!-- PRIVATE OWNER NOTES DRAWER (Capable of 200+ Notes with CSV Export) -->
     <div id="notesDrawer" class="notes-drawer-overlay">
       <div class="drawer-content">
         <div class="drawer-header">
@@ -208,7 +212,12 @@
         <div class="notes-vault">
           <div class="vault-bar">
             <h4>Saved Connections (<span id="notesCount">0</span>)</h4>
-            <input type="text" id="crmSearch" placeholder="Search notes..." oninput="renderNotes()">
+            <div class="vault-actions">
+              <button type="button" class="export-csv-btn" onclick="exportNotesToCSV()" title="Export all leads to Excel CSV">
+                <i class="fa-solid fa-file-csv"></i> Export CSV
+              </button>
+              <input type="text" id="crmSearch" placeholder="Search..." oninput="renderNotes()">
+            </div>
           </div>
 
           <div id="notesList" class="notes-list-grid">
