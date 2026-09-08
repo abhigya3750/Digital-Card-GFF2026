@@ -22,7 +22,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <!-- App Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body class="theme-nerds">
 
@@ -34,8 +34,8 @@
         <span class="brand-title">Fintech Pass</span>
       </div>
       
-      <!-- Profile Selector Dropdown in Header -->
-      <div class="profile-selector" id="profileSelectorBox">
+      <!-- Profile Selector Dropdown (Hidden by default for public scanners; shown in admin mode) -->
+      <div class="profile-selector" id="profileSelectorBox" style="display: none;">
         <select id="profileSelect" onchange="switchProfile(this.value)">
           <option value="abhigya" selected>Abhigya Kanungo</option>
           <option value="rishi">Rishi Raj (NPCI / NBBL)</option>
@@ -52,9 +52,7 @@
       <div class="hero-cover" id="heroCover">
         <div class="hero-bg-overlay"></div>
         <div class="hero-header-content">
-          <div class="event-pill">
-            <i class="fa-solid fa-bolt"></i> Global Fintech Fest 2026
-          </div>
+          <div></div> <!-- Spacer for flex alignment -->
           <button class="qr-float-btn" onclick="openQrModal()" title="Show Profile QR">
             <i class="fa-solid fa-qrcode"></i>
           </button>
@@ -289,6 +287,6 @@
 
   </div>
 
-  <script src="app.js?v=9"></script>
+  <script src="app.js?v=10"></script>
 </body>
 </html>
