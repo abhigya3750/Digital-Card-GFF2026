@@ -99,13 +99,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const urlParams = new URLSearchParams(window.location.search);
-  const profileParam = urlParams.get("profile");
+  const rawParam = (urlParams.get("profile") || urlParams.get("p") || urlParams.get("name") || urlParams.get("id") || "").toLowerCase().trim();
 
-  if (profileParam && PROFILES[profileParam.toLowerCase()]) {
-    currentProfile = PROFILES[profileParam.toLowerCase()];
-  } else {
-    currentProfile = PROFILES.abhigya;
-  }
+  const ALIASES = {
+    abhigya: "abhigya", ak: "abhigya",
+    rishi: "rishi", rr: "rishi",
+    mahavir: "mahavir", mg: "mahavir",
+    kamal: "kamal", kp: "kamal"
+  };
+
+  const targetId = ALIASES[rawParam] || (PROFILES[rawParam] ? rawParam : "abhigya");
+  currentProfile = PROFILES[targetId] || PROFILES.abhigya;
 
   // Admin query param toggle
   if (urlParams.get("admin") === "true" || urlParams.get("owner") === "true") {
