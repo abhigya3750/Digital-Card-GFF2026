@@ -2,7 +2,7 @@
    GFF 2026 Digital Pass - Network-First Service Worker
    ========================================================================== */
 
-const CACHE_NAME = "gff-pass-cache-v6";
+const CACHE_NAME = "gff-pass-cache-v7";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -11,6 +11,7 @@ const ASSETS_TO_CACHE = [
   "./assets/abhigya_photo.jpg",
   "./assets/rishi_photo.jpg",
   "./assets/kamal_photo.jpg",
+  "./assets/mahavir_photo.jpg",
   "./assets/gff_banner.png",
   "./assets/gff_banner.jpg",
   "./assets/npci_logo.svg",

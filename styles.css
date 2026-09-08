@@ -181,7 +181,7 @@ body {
   height: 145px;
   background-color: #ffffff;
   background-image: url('assets/gff_banner.png');
-  background-size: cover;
+  background-size: 100% 100%;
   background-position: center center;
   background-repeat: no-repeat;
   padding: 14px 16px;

@@ -77,10 +77,10 @@ const PROFILES = {
     displayLinkedIn: "linkedin.com/in/mahavirgalve",
     initials: "MG",
     themeClass: "theme-npci",
-    photoSrc: "",
+    photoSrc: "assets/mahavir_photo.jpg",
     logoSrc: "assets/npci_logo.svg",
     logoFallback: "NPCI / NBBL",
-    pin: "8390",
+    pin: "0000",
     waMessage: "Hi Mahavir, great connecting with you at Global Fintech Fest 2026! Let's connect regarding NBBL Fintech Solutions."
   }
 };
