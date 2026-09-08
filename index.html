@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Digital Pass & Contact Card</title>
+  <meta name="description" content="Digital Business Card & Contact Pass. Save contact, WhatsApp, LinkedIn, and email.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- QRCode Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-nerds">
+
+  <div class="app-wrapper">
+    <!-- Top Header Bar -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-badge"><span class="flag-dot saffron"></span><span class="flag-dot green"></span> GFF '26</span>
+        <span class="brand-title">Fintech Pass</span>
+      </div>
+      
+      <!-- Profile Switcher -->
+      <div class="profile-selector">
+        <select id="profileSelect" onchange="switchProfile(this.value)">
+          <option value="abhigya" selected>Abhigya Kanungo</option>
+          <option value="rishi">Rishi Raj (NPCI / NBBL)</option>
+          <option value="kamal">Kamal Parihar (Tapits)</option>
+        </select>
+      </div>
+    </header>
+
+    <!-- Main Card Container -->
+    <div class="vcard-main-card">
+      
+      <!-- LINKEDIN-STYLE HERO COVER BANNER -->
+      <div class="hero-cover" id="heroCover">
+        <div class="hero-bg-overlay"></div>
+        <div class="hero-header-content">
+          <div class="event-pill">
+            <i class="fa-solid fa-bolt"></i> Global Fintech Fest 2026
+          </div>
+          <button class="qr-float-btn" onclick="openQrModal()" title="Show Profile QR">
+            <i class="fa-solid fa-qrcode"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- FULL CIRCLE PORTRAIT FRAME (LinkedIn Style Overlap - Unclipped) -->
+      <div class="hero-portrait-row">
+        <div class="portrait-frame" id="portraitFrame">
+          <img id="profilePhotoImg" src="" alt="Profile Photo" class="profile-photo-img" style="display:none;">
+          <span class="hero-initials" id="heroInitials">AK</span>
+        </div>
+
+        <!-- Company Logo Box (Right Aligned in Portrait Row) -->
+        <div class="logo-box" id="logoBox">
+          <img id="compLogoImg" src="" alt="Company Logo" class="comp-logo-img">
+          <span id="compLogoFallback" class="logo-fallback-text" style="display:none;"></span>
+        </div>
+      </div>
+
+      <!-- CARD BODY CONTENT -->
+      <div class="card-body">
+        
+        <!-- Name & Headline -->
+        <div class="profile-titles">
+          <h1 class="profile-name" id="profName">Abhigya Kanungo</h1>
+          <p class="profile-headline" id="profHeadline">Founding Member | Open for Product & Growth Roles</p>
+          <p class="profile-org" id="profOrg" style="display:none;"></p>
+        </div>
+
+        <!-- Info Badges -->
+        <div class="info-tags" id="infoTags">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Primary Call to Action Buttons -->
+        <div class="primary-action-grid">
+          <button class="btn btn-save" onclick="downloadVCard()">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Save Contact</span>
+          </button>
+
+          <a id="btnWhatsapp" href="#" target="_blank" class="btn btn-whatsapp">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>WhatsApp</span>
+          </a>
+        </div>
+
+        <!-- Direct Contact Links -->
+        <div class="contact-links-list" id="contactLinksList">
+          <a id="btnLinkedIn" href="#" target="_blank" class="link-card linkedin">
+            <div class="link-icon"><i class="fa-brands fa-linkedin-in"></i></div>
+            <div class="link-text">
+              <span class="lbl">LinkedIn</span>
+              <span class="val" id="dispLinkedIn">linkedin.com/in/abhigyakanungo</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow-icon"></i>
+          </a>
+
+          <a id="btnEmail" href="#" class="link-card email">
+            <div class="link-icon"><i class="fa-solid fa-envelope"></i></div>
+            <div class="link-text">
+              <span class="lbl" id="lblEmail">Email</span>
+              <span class="val" id="dispEmail">info@nerds.co.in</span>
+            </div>
+            <i class="fa-solid fa-copy copy-icon" onclick="copyToClipboard(event, document.getElementById('dispEmail').textContent, 'Email copied!')"></i>
+          </a>
+
+          <a id="btnEmailPersonal" href="#" class="link-card email" style="display:none;">
+            <div class="link-icon"><i class="fa-solid fa-envelope-open"></i></div>
+            <div class="link-text">
+              <span class="lbl">Personal Email</span>
+              <span class="val" id="dispEmailPersonal">kanungoabhigya3750@gmail.com</span>
+            </div>
+            <i class="fa-solid fa-copy copy-icon" onclick="copyToClipboard(event, 'kanungoabhigya3750@gmail.com', 'Personal email copied!')"></i>
+          </a>
+
+          <a id="btnPhone" href="#" class="link-card phone">
+            <div class="link-icon"><i class="fa-solid fa-phone"></i></div>
+            <div class="link-text">
+              <span class="lbl">Phone / WhatsApp</span>
+              <span class="val" id="dispPhone">+91 9993805217</span>
+            </div>
+            <i class="fa-solid fa-copy copy-icon" onclick="copyToClipboard(event, document.getElementById('dispPhone').textContent, 'Phone copied!')"></i>
+          </a>
+        </div>
+
+        <!-- FOOTER: Private Owner Access Gateway -->
+        <div class="card-footer-gateway">
+          <span class="public-hint"><i class="fa-solid fa-mobile-screen"></i> Tap Save Contact to export</span>
+          <button class="owner-lock-btn" onclick="openOwnerAuthModal()" title="Owner Private Notes Portal">
+            <i class="fa-solid fa-lock"></i> <span id="ownerBtnLabel">Owner Notes</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PRIVATE OWNER NOTES DRAWER -->
+    <div id="notesDrawer" class="notes-drawer-overlay">
+      <div class="drawer-content">
+        <div class="drawer-header">
+          <div class="drawer-title">
+            <i class="fa-solid fa-book-bookmark"></i>
+            <div>
+              <h3 id="drawerOwnerTitle">Private Lead Notes</h3>
+              <p>Exclusive vault for logging GFF 2026 connections & ideas</p>
+            </div>
+          </div>
+          <button class="close-drawer-btn" onclick="closeNotesDrawer()">&times;</button>
+        </div>
+
+        <!-- Add Note Form -->
+        <form id="noteForm" onsubmit="saveNote(event)" class="drawer-form">
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="leadName"><i class="fa-solid fa-user"></i> Contact Name *</label>
+              <input type="text" id="leadName" placeholder="e.g. Vikram Sharma" required>
+            </div>
+            <div class="form-group flex-1">
+              <label for="leadCompany"><i class="fa-solid fa-building"></i> Company *</label>
+              <input type="text" id="leadCompany" placeholder="e.g. Razorpay / PhonePe" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="leadContact"><i class="fa-solid fa-address-card"></i> Phone / Email</label>
+              <input type="text" id="leadContact" placeholder="+91 9876543210">
+            </div>
+            <div class="form-group flex-1">
+              <label for="leadTag"><i class="fa-solid fa-tag"></i> Discussion Topic</label>
+              <select id="leadTag">
+                <option value="Product & Growth">Product & Growth</option>
+                <option value="NBBL / BBPS Partnership">NBBL / BBPS Partnership</option>
+                <option value="Merchant Tech & AEPS">Merchant Tech & AEPS</option>
+                <option value="UPI International">UPI International</option>
+                <option value="Credit on UPI">Credit on UPI</option>
+                <option value="Account Aggregator">Account Aggregator</option>
+                <option value="General Networking">General Networking</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="leadNotes"><i class="fa-solid fa-pen-to-square"></i> Key Takeaways & Action Items</label>
+            <textarea id="leadNotes" rows="2" placeholder="Discussion summary, follow-up commitments..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-save">
+            <i class="fa-solid fa-plus-circle"></i> Save Lead Note
+          </button>
+        </form>
+
+        <!-- Saved Notes Vault -->
+        <div class="notes-vault">
+          <div class="vault-bar">
+            <h4>Saved Connections (<span id="notesCount">0</span>)</h4>
+            <input type="text" id="crmSearch" placeholder="Search notes..." oninput="renderNotes()">
+          </div>
+
+          <div id="notesList" class="notes-list-grid">
+            <!-- Dynamic notes -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- OWNER AUTH PIN MODAL -->
+    <div id="authModal" class="modal-overlay" onclick="closeAuthModal(event)">
+      <div class="modal-card" onclick="event.stopPropagation()">
+        <button class="close-modal-btn" onclick="closeAuthModal()">&times;</button>
+        <div class="auth-header">
+          <i class="fa-solid fa-shield-keyhole auth-icon"></i>
+          <h3>Owner Access Security</h3>
+          <p>Enter PIN for <span id="pinOwnerName">Abhigya</span> to open private notes.</p>
+        </div>
+
+        <div class="pin-input-group">
+          <input type="password" id="ownerPinInput" placeholder="••••" autofocus onkeyup="if(event.key==='Enter') verifyPin()">
+        </div>
+
+        <button class="btn btn-save" onclick="verifyPin()">
+          <i class="fa-solid fa-lock-open"></i> Unlock Notes Vault
+        </button>
+      </div>
+    </div>
+
+    <!-- MINIMAL CLEAN QR MODAL -->
+    <div id="qrModal" class="modal-overlay" onclick="closeQrModal(event)">
+      <div class="modal-card qr-modal-card" onclick="event.stopPropagation()">
+        <button class="close-modal-btn" onclick="closeQrModal()">&times;</button>
+        
+        <div class="qr-modal-header">
+          <h3 class="qr-modal-title">Scan Digital Card</h3>
+          <p id="qrModalSub" class="qr-modal-sub">Abhigya Kanungo</p>
+        </div>
+
+        <div class="qr-display-wrapper">
+          <div id="qrcode" class="qr-box"></div>
+        </div>
+
+        <div class="qr-modal-footer">
+          <div class="qr-url-badge">
+            <i class="fa-solid fa-globe"></i>
+            <span id="qrUrlText" class="url-subtext"></span>
+          </div>
+          
+          <button class="btn btn-save btn-copy-pass" onclick="copyProfileUrl()">
+            <i class="fa-solid fa-link"></i> Copy Pass Link
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast-popup">
+      <i class="fa-solid fa-circle-check"></i> <span id="toastMsg">Success</span>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
