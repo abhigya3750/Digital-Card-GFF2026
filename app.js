@@ -62,6 +62,26 @@ const PROFILES = {
     logoFallback: "FINGPAY",
     pin: "141120",
     waMessage: "Hi Kamal, great connecting with you at Global Fintech Fest 2026! Let's connect regarding Tapits / Fingpay."
+  },
+  mahavir: {
+    id: "mahavir",
+    name: "Mahavir Galve",
+    headline: "Lead Fintech Solutions at NBBL",
+    org: "NPCI Bharat BillPay Limited (NBBL)",
+    title: "Lead Fintech Solutions",
+    phone: "+918390079634",
+    displayPhone: "+91 83900 79634",
+    email: "mahavir.galve@npci.org.in",
+    personalEmail: "",
+    linkedIn: "https://www.linkedin.com/in/mahavirgalve/",
+    displayLinkedIn: "linkedin.com/in/mahavirgalve",
+    initials: "MG",
+    themeClass: "theme-npci",
+    photoSrc: "",
+    logoSrc: "assets/npci_logo.svg",
+    logoFallback: "NPCI / NBBL",
+    pin: "8390",
+    waMessage: "Hi Mahavir, great connecting with you at Global Fintech Fest 2026! Let's connect regarding NBBL Fintech Solutions."
   }
 };
 
