@@ -22,7 +22,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <!-- App Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body class="theme-nerds">
 
@@ -34,8 +34,8 @@
         <span class="brand-title">Fintech Pass</span>
       </div>
       
-      <!-- Hidden by default for public scanners; shown only in admin/owner mode -->
-      <div class="profile-selector" id="profileSelectorBox" style="display: none;">
+      <!-- Profile Selector Dropdown in Header -->
+      <div class="profile-selector" id="profileSelectorBox">
         <select id="profileSelect" onchange="switchProfile(this.value)">
           <option value="abhigya" selected>Abhigya Kanungo</option>
           <option value="rishi">Rishi Raj (NPCI / NBBL)</option>
@@ -287,6 +287,6 @@
 
   </div>
 
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
