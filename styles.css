@@ -454,6 +454,11 @@ body {
   color: #10b981;
 }
 
+.link-card.website .link-icon {
+  background: #fef3c7;
+  color: #d97706;
+}
+
 .link-text {
   display: flex;
   flex-direction: column;
@@ -627,6 +632,40 @@ body {
   color: var(--brand-primary);
   outline: none;
   cursor: pointer;
+}
+
+/* Vault Dual Tab Switcher */
+.vault-tabs-header {
+  display: flex;
+  gap: 8px;
+  background: var(--bg-card-sub);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+.vault-tab-btn {
+  flex: 1;
+  padding: 9px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 0.78rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: var(--transition);
+}
+
+.vault-tab-btn.active {
+  background: #ffffff;
+  color: var(--brand-primary);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
 }
 
 .drawer-form {

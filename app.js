@@ -15,6 +15,8 @@ const PROFILES = {
     personalEmail: "kanungoabhigya3750@gmail.com",
     linkedIn: "https://www.linkedin.com/in/abhigyakanungo",
     displayLinkedIn: "linkedin.com/in/abhigyakanungo",
+    website: "https://nerds.co.in",
+    displayWebsite: "nerds.co.in",
     initials: "AK",
     themeClass: "theme-nerds",
     photoSrc: "assets/abhigya_photo.jpg",
@@ -215,9 +217,19 @@ function renderProfileCard(prof) {
   const waUrl = `https://wa.me/${cleanPhone.replace("+", "")}?text=${encodeURIComponent(prof.waMessage)}`;
   document.getElementById("btnWhatsapp").href = waUrl;
 
-  // Social Links
+  // Social & Web Links
   document.getElementById("btnLinkedIn").href = prof.linkedIn;
   document.getElementById("dispLinkedIn").textContent = prof.displayLinkedIn;
+
+  // Website Card
+  const websiteCard = document.getElementById("btnWebsite");
+  if (prof.website) {
+    websiteCard.style.display = "flex";
+    websiteCard.href = prof.website;
+    document.getElementById("dispWebsite").textContent = prof.displayWebsite || prof.website.replace(/^https?:\/\//, '');
+  } else {
+    websiteCard.style.display = "none";
+  }
 
   // Primary Email
   document.getElementById("dispEmail").textContent = prof.email;
@@ -259,6 +271,7 @@ function downloadVCard() {
     `EMAIL;TYPE=WORK,INTERNET:${p.email}`,
     p.personalEmail ? `EMAIL;TYPE=HOME,INTERNET:${p.personalEmail}` : "",
     `URL:${p.linkedIn}`,
+    p.website ? `URL;TYPE=WORK:${p.website}` : "",
     "NOTE:Met at Global Fintech Fest 2026 (GFF 2026).",
     "END:VCARD"
   ].filter(Boolean);
@@ -331,9 +344,33 @@ function verifyPin() {
   }
 }
 
+let activeVaultTab = "leads";
+
+function switchVaultTab(tabName) {
+  activeVaultTab = tabName;
+  const tabLeads = document.getElementById("tabBtnLeads");
+  const tabThoughts = document.getElementById("tabBtnThoughts");
+  const contentLeads = document.getElementById("tabContentLeads");
+  const contentThoughts = document.getElementById("tabContentThoughts");
+
+  if (tabName === "leads") {
+    if (tabLeads) tabLeads.classList.add("active");
+    if (tabThoughts) tabThoughts.classList.remove("active");
+    if (contentLeads) contentLeads.style.display = "block";
+    if (contentThoughts) contentThoughts.style.display = "none";
+    renderNotes();
+  } else {
+    if (tabThoughts) tabThoughts.classList.add("active");
+    if (tabLeads) tabLeads.classList.remove("active");
+    if (contentThoughts) contentThoughts.style.display = "block";
+    if (contentLeads) contentLeads.style.display = "none";
+    renderThoughts();
+  }
+}
+
 function openNotesDrawer() {
-  document.getElementById("drawerOwnerTitle").textContent = `${currentProfile.name}'s Lead Notes`;
-  renderNotes();
+  document.getElementById("drawerOwnerTitle").textContent = `${currentProfile.name}'s Vault`;
+  switchVaultTab(activeVaultTab || 'leads');
   document.getElementById("notesDrawer").classList.add("active");
 }
 
@@ -500,6 +537,108 @@ function exportNotesToCSV() {
   URL.revokeObjectURL(url);
 
   showToast(`Exported ${notes.length} leads to CSV!`);
+}
+
+// LocalStorage Quick Thoughts & Key Points Management
+function getThoughtsStorageKey() {
+  return `gff_thoughts_v1_${currentProfile.id}`;
+}
+
+function getThoughts() {
+  const stored = localStorage.getItem(getThoughtsStorageKey());
+  return stored ? JSON.parse(stored) : [];
+}
+
+function saveThought(e) {
+  e.preventDefault();
+  const title = document.getElementById("thoughtTitle").value.trim();
+  const desc = document.getElementById("thoughtDesc").value.trim();
+
+  if (!title || !desc) return;
+
+  const newThought = {
+    id: Date.now(),
+    title,
+    desc,
+    date: new Date().toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  };
+
+  const currentThoughts = getThoughts();
+  currentThoughts.unshift(newThought);
+  localStorage.setItem(getThoughtsStorageKey(), JSON.stringify(currentThoughts));
+
+  document.getElementById("thoughtForm").reset();
+  renderThoughts();
+  showToast(`Thought saved!`);
+}
+
+function renderThoughts() {
+  const thoughts = getThoughts();
+  const searchInput = document.getElementById("thoughtSearch");
+  const search = searchInput ? (searchInput.value || "").toLowerCase() : "";
+  const listContainer = document.getElementById("thoughtsList");
+  const countEl = document.getElementById("thoughtsCount");
+  if (countEl) countEl.textContent = thoughts.length;
+
+  if (!listContainer) return;
+
+  const filtered = thoughts.filter(t =>
+    t.title.toLowerCase().includes(search) ||
+    t.desc.toLowerCase().includes(search)
+  );
+
+  if (filtered.length === 0) {
+    listContainer.innerHTML = `
+      <div style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.85rem;">
+        <i class="fa-solid fa-lightbulb" style="font-size: 2rem; margin-bottom: 8px; color: var(--text-light);"></i>
+        <p>No thoughts or key points logged for ${currentProfile.name} yet.</p>
+      </div>
+    `;
+    return;
+  }
+
+  listContainer.innerHTML = filtered.map(t => `
+    <div class="note-item">
+      <div class="note-item-header">
+        <div class="note-item-name"><i class="fa-solid fa-heading" style="color: var(--brand-primary); margin-right: 4px;"></i> ${escapeHtml(t.title)}</div>
+        <span class="note-tag" style="background: var(--brand-light-bg); color: var(--brand-primary);">${t.date}</span>
+      </div>
+      <div style="font-size: 0.84rem; color: var(--text-dark); margin-top: 6px; white-space: pre-wrap; line-height: 1.4;">${escapeHtml(t.desc)}</div>
+    </div>
+  `).join('');
+}
+
+function exportThoughtsToCSV() {
+  const thoughts = getThoughts();
+  if (thoughts.length === 0) {
+    showToast("No thoughts to export yet!");
+    return;
+  }
+
+  const headers = ["Topic / Title", "Description / Key Points", "Date"];
+  const rows = thoughts.map(t => [
+    `"${(t.title || '').replace(/"/g, '""')}"`,
+    `"${(t.desc || '').replace(/"/g, '""')}"`,
+    `"${(t.date || '').replace(/"/g, '""')}"`
+  ]);
+
+  const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", `${currentProfile.name.replace(/\s+/g, '_')}_GFF2026_Thoughts.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+
+  showToast(`Exported ${thoughts.length} thoughts to CSV!`);
 }
 
 function escapeHtml(str) {

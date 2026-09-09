@@ -22,7 +22,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <!-- App Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=14">
 </head>
 <body class="theme-nerds">
 
@@ -107,6 +107,15 @@
             <i class="fa-solid fa-arrow-up-right-from-square arrow-icon"></i>
           </a>
 
+          <a id="btnWebsite" href="#" target="_blank" class="link-card website" style="display:none;">
+            <div class="link-icon"><i class="fa-solid fa-globe"></i></div>
+            <div class="link-text">
+              <span class="lbl">Website</span>
+              <span class="val" id="dispWebsite">nerds.co.in</span>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square arrow-icon"></i>
+          </a>
+
           <a id="btnEmail" href="#" class="link-card email">
             <div class="link-icon"><i class="fa-solid fa-envelope"></i></div>
             <div class="link-text">
@@ -146,21 +155,21 @@
       </div>
     </div>
 
-    <!-- PRIVATE OWNER NOTES DRAWER -->
+    <!-- PRIVATE OWNER NOTES DRAWER (Dual Tab System) -->
     <div id="notesDrawer" class="notes-drawer-overlay">
       <div class="drawer-content">
         <div class="drawer-header">
           <div class="drawer-title">
             <i class="fa-solid fa-book-bookmark"></i>
             <div>
-              <h3 id="drawerOwnerTitle">Private Lead Notes</h3>
-              <p>Exclusive vault for logging GFF 2026 connections & ideas</p>
+              <h3 id="drawerOwnerTitle">Private Vault</h3>
+              <p>Log GFF 2026 leads & jot down personal thoughts</p>
             </div>
           </div>
           <button class="close-drawer-btn" onclick="closeNotesDrawer()">&times;</button>
         </div>
 
-        <!-- Owner Admin Profile Switcher (Only visible inside unlocked Vault) -->
+        <!-- Owner Admin Profile Switcher -->
         <div class="drawer-admin-switch">
           <label for="drawerProfileSelect"><i class="fa-solid fa-user-gear"></i> Admin Switch Profile:</label>
           <select id="drawerProfileSelect" onchange="switchProfile(this.value)">
@@ -171,62 +180,111 @@
           </select>
         </div>
 
-        <!-- Add Note Form -->
-        <form id="noteForm" onsubmit="saveNote(event)" class="drawer-form">
-          <div class="form-row">
-            <div class="form-group flex-1">
-              <label for="leadName"><i class="fa-solid fa-user"></i> Contact Name *</label>
-              <input type="text" id="leadName" placeholder="e.g. Vikram Sharma" required>
-            </div>
-            <div class="form-group flex-1">
-              <label for="leadCompany"><i class="fa-solid fa-building"></i> Company *</label>
-              <input type="text" id="leadCompany" placeholder="e.g. Razorpay / PhonePe" required>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group flex-1">
-              <label for="leadContact"><i class="fa-solid fa-address-card"></i> Phone / Email</label>
-              <input type="text" id="leadContact" placeholder="+91 9876543210">
-            </div>
-            <div class="form-group flex-1">
-              <label for="leadTag"><i class="fa-solid fa-tag"></i> Discussion Topic</label>
-              <select id="leadTag">
-                <option value="Product & Growth">Product & Growth</option>
-                <option value="NBBL / BBPS Partnership">NBBL / BBPS Partnership</option>
-                <option value="Merchant Tech & AEPS">Merchant Tech & AEPS</option>
-                <option value="UPI International">UPI International</option>
-                <option value="Credit on UPI">Credit on UPI</option>
-                <option value="Account Aggregator">Account Aggregator</option>
-                <option value="General Networking">General Networking</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="leadNotes"><i class="fa-solid fa-pen-to-square"></i> Key Takeaways & Action Items</label>
-            <textarea id="leadNotes" rows="2" placeholder="Discussion summary, follow-up commitments..."></textarea>
-          </div>
-
-          <button type="submit" class="btn btn-save">
-            <i class="fa-solid fa-plus-circle"></i> Save Lead Note
+        <!-- Vault Dual Tab Switcher -->
+        <div class="vault-tabs-header">
+          <button class="vault-tab-btn active" id="tabBtnLeads" onclick="switchVaultTab('leads')">
+            <i class="fa-solid fa-address-book"></i> Lead Contacts
           </button>
-        </form>
+          <button class="vault-tab-btn" id="tabBtnThoughts" onclick="switchVaultTab('thoughts')">
+            <i class="fa-solid fa-lightbulb"></i> Quick Thoughts & Notes
+          </button>
+        </div>
 
-        <!-- Saved Notes Vault -->
-        <div class="notes-vault">
-          <div class="vault-bar">
-            <h4>Saved Connections (<span id="notesCount">0</span>)</h4>
-            <div class="vault-actions">
-              <button type="button" class="export-csv-btn" onclick="exportNotesToCSV()" title="Export all leads to Excel CSV">
-                <i class="fa-solid fa-file-csv"></i> Export CSV
-              </button>
-              <input type="text" id="crmSearch" placeholder="Search..." oninput="renderNotes()">
+        <!-- TAB 1: LEAD CONTACTS CRM -->
+        <div id="tabContentLeads" class="tab-pane active">
+          <!-- Add Note Form -->
+          <form id="noteForm" onsubmit="saveNote(event)" class="drawer-form">
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label for="leadName"><i class="fa-solid fa-user"></i> Contact Name *</label>
+                <input type="text" id="leadName" placeholder="e.g. Vikram Sharma" required>
+              </div>
+              <div class="form-group flex-1">
+                <label for="leadCompany"><i class="fa-solid fa-building"></i> Company *</label>
+                <input type="text" id="leadCompany" placeholder="e.g. Razorpay / PhonePe" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label for="leadContact"><i class="fa-solid fa-address-card"></i> Phone / Email</label>
+                <input type="text" id="leadContact" placeholder="+91 9876543210">
+              </div>
+              <div class="form-group flex-1">
+                <label for="leadTag"><i class="fa-solid fa-tag"></i> Discussion Topic</label>
+                <select id="leadTag">
+                  <option value="Product & Growth">Product & Growth</option>
+                  <option value="NBBL / BBPS Partnership">NBBL / BBPS Partnership</option>
+                  <option value="Merchant Tech & AEPS">Merchant Tech & AEPS</option>
+                  <option value="UPI International">UPI International</option>
+                  <option value="Credit on UPI">Credit on UPI</option>
+                  <option value="Account Aggregator">Account Aggregator</option>
+                  <option value="General Networking">General Networking</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="leadNotes"><i class="fa-solid fa-pen-to-square"></i> Key Takeaways & Action Items</label>
+              <textarea id="leadNotes" rows="2" placeholder="Discussion summary, follow-up commitments..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-save">
+              <i class="fa-solid fa-plus-circle"></i> Save Lead Contact
+            </button>
+          </form>
+
+          <!-- Saved Leads Vault -->
+          <div class="notes-vault">
+            <div class="vault-bar">
+              <h4>Saved Leads (<span id="notesCount">0</span>)</h4>
+              <div class="vault-actions">
+                <button type="button" class="export-csv-btn" onclick="exportNotesToCSV()" title="Export leads to CSV">
+                  <i class="fa-solid fa-file-csv"></i> Export CSV
+                </button>
+                <input type="text" id="crmSearch" placeholder="Search..." oninput="renderNotes()">
+              </div>
+            </div>
+
+            <div id="notesList" class="notes-list-grid">
+              <!-- Dynamic notes -->
             </div>
           </div>
+        </div>
 
-          <div id="notesList" class="notes-list-grid">
-            <!-- Dynamic notes -->
+        <!-- TAB 2: QUICK THOUGHTS & KEY POINTS -->
+        <div id="tabContentThoughts" class="tab-pane" style="display: none;">
+          <form id="thoughtForm" onsubmit="saveThought(event)" class="drawer-form">
+            <div class="form-group">
+              <label for="thoughtTitle"><i class="fa-solid fa-heading"></i> Note Topic / Subject / Title *</label>
+              <input type="text" id="thoughtTitle" placeholder="e.g. Agentic AI Demo Idea / SEBI Session Qs" required>
+            </div>
+
+            <div class="form-group">
+              <label for="thoughtDesc"><i class="fa-solid fa-align-left"></i> Description / Key Points / Thoughts *</label>
+              <textarea id="thoughtDesc" rows="3" placeholder="Write your key takeaways, questions, business ideas, or observations..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-save">
+              <i class="fa-solid fa-lightbulb"></i> Save Quick Thought
+            </button>
+          </form>
+
+          <!-- Saved Thoughts Vault -->
+          <div class="notes-vault">
+            <div class="vault-bar">
+              <h4>Saved Thoughts (<span id="thoughtsCount">0</span>)</h4>
+              <div class="vault-actions">
+                <button type="button" class="export-csv-btn" onclick="exportThoughtsToCSV()" title="Export thoughts to CSV">
+                  <i class="fa-solid fa-file-csv"></i> Export CSV
+                </button>
+                <input type="text" id="thoughtSearch" placeholder="Search..." oninput="renderThoughts()">
+              </div>
+            </div>
+
+            <div id="thoughtsList" class="notes-list-grid">
+              <!-- Dynamic thoughts -->
+            </div>
           </div>
         </div>
 
@@ -287,6 +345,6 @@
 
   </div>
 
-  <script src="app.js?v=13"></script>
+  <script src="app.js?v=14"></script>
 </body>
 </html>

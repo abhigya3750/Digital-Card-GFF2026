@@ -1,8 +1,8 @@
 /* ==========================================================================
-   GFF 2026 Digital Pass - Network-First Service Worker
+   GFF 2026 Digital Pass - Ultra Fast Offline & Poor Network Service Worker
    ========================================================================== */
 
-const CACHE_NAME = "gff-pass-cache-v13";
+const CACHE_NAME = "gff-pass-cache-v14";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -23,7 +23,7 @@ const ASSETS_TO_CACHE = [
   "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
 ];
 
-// Install Event - Immediate skipWaiting
+// Install Event - Pre-cache all core assets & immediate skipWaiting
 self.addEventListener("install", (e) => {
   self.skipWaiting();
   e.waitUntil(
@@ -48,28 +48,27 @@ self.addEventListener("activate", (e) => {
   );
 });
 
-// Fetch Event - Network First, Fallback to Cache (Ensures Vercel updates load immediately)
+// Fetch Event - Instant 0ms Cache-First with Background Revalidation for Poor Connection
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
 
   e.respondWith(
-    fetch(e.request).then((networkResponse) => {
-      if (networkResponse && networkResponse.status === 200) {
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(e.request, responseToCache);
-        });
+    caches.match(e.request).then((cachedResponse) => {
+      const fetchPromise = fetch(e.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(e.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      }).catch(() => cachedResponse);
+
+      // Return cached asset instantly for 0ms load speed if network is slow/offline
+      if (cachedResponse) {
+        return cachedResponse;
       }
-      return networkResponse;
-    }).catch(() => {
-      return caches.match(e.request).then((cachedResponse) => {
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        if (e.request.mode === "navigate") {
-          return caches.match("./index.html");
-        }
-      });
+      return fetchPromise;
     })
   );
 });
