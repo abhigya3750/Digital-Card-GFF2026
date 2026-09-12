@@ -2,10 +2,11 @@
    GFF 2026 Digital Pass - Ultra Fast Offline & Poor Network Service Worker
    ========================================================================== */
 
-const CACHE_NAME = "gff-pass-cache-v14";
+const CACHE_NAME = "gff-pass-cache-v15";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
+  "./export.html",
   "./styles.css",
   "./app.js",
   "./assets/abhigya_photo.jpg",
